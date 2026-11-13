@@ -243,6 +243,7 @@ Look for `active (running)`. The last command must print an empty container tabl
 
 3. Click **Save**, then **Build Now**.
 4. Open the build number > **Console Output**. The first build is slow because it pulls the Python and MySQL images (5 to 10 minutes on a small server).
+
 ![Project Screenshot](screenshots/S16-console-success.png)
 
 The pipeline has three stages: **Clone Code**, **Build Docker Image** and **Deploy with Docker Compose**. A successful run ends with `Finished: SUCCESS`.
