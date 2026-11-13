@@ -17,12 +17,10 @@ A two-tier web application (**Flask** + **MySQL**) deployed on an **AWS EC2** in
 90. [Step 6: First-time Jenkins setup](#step-6-first-time-jenkins-setup)
 10. [Step 7: Create the pipeline job](#step-7-create-the-pipeline-job)
 11. [Step 8: Verify the deployment](#step-8-verify-the-deployment)
-12. [Step 9: Automatic builds (optional)](#step-9-automatic-builds-optional)
-13. [Stopping, restarting and cleaning up](#stopping-restarting-and-cleaning-up)
-14. [Troubleshooting](#troubleshooting)
-15. [Screenshots](#screenshots)
-16. [Future improvements](#future-improvements)
-17. [Credits](#credits)
+12. [Stopping, restarting and cleaning up](#stopping-restarting-and-cleaning-up)
+13. [Troubleshooting](#troubleshooting)
+14. [Screenshots](#screenshots)
+15. [Credits](#credits)
 
 ---
 
@@ -81,7 +79,7 @@ A two-tier web application (**Flask** + **MySQL**) deployed on an **AWS EC2** in
    | Key pair | Create new, RSA, `.pem` format. Store it safely: AWS will not let you download it again |
    | Storage | **20 to 30 GiB gp3** (the 8 GiB default fills up) |
    | Public IP | Auto-assign enabled |
-(screenshots/S03-ec2-launch-summary.png)
+![Project Screenshot](screenshots/S03-ec2-launch-summary.png)
 
 3. Create a security group with these inbound rules:
 
@@ -91,10 +89,10 @@ A two-tier web application (**Flask** + **MySQL**) deployed on an **AWS EC2** in
    | HTTP | 80 | Anywhere |
    | Custom TCP | 5000 | Anywhere |
    | Custom TCP | 8080 | My IP |
-(screenshots/S04-security-group.png)
+![Project Screenshot](screenshots/S04-security-group.png)
 
 4. Click **Launch instance**. Wait for **Running** and **2/2 checks passed**, then copy the **Public IPv4 address**.
-(screenshots/S05-instance-running.png)
+![Project Screenshot](screenshots/S05-instance-running.png)
 
 > The public IP changes every time you stop and start the instance.
 
@@ -120,7 +118,7 @@ ssh -i ~/Downloads/your-key.pem ubuntu@<public-ip>
 ```
 
 The username is always `ubuntu`. Replace `<public-ip>` with the real address and drop the angle brackets. As a backup you can use **Connect > EC2 Instance Connect** in the console.
-(screenshots/S06-ssh-login.png)
+![Project Screenshot](screenshots/S06-ssh-login.png)
 
 ## Step 3: Prepare the server
 
@@ -156,7 +154,7 @@ sudo reboot
 ```
 
 Reconnect afterwards (the IP stays the same on a reboot). Or skip this and lower the Jenkins threshold in Step 6.
-(screenshots/S07-swap-and-disk.png)
+![Project Screenshot](screenshots/S07-swap-and-disk.png)
 
 ## Step 4: Install Docker and Docker Compose
 
@@ -214,7 +212,7 @@ sudo -u jenkins docker ps
 ```
 
 Look for `active (running)`. The last command must print an empty container table.
-(screenshots/S10-jenkins-status.png)
+![Project Screenshot](screenshots/S10-jenkins-status.png)
 
 ## Step 6: First-time Jenkins setup
 
@@ -223,9 +221,9 @@ Look for `active (running)`. The last command must print an empty container tabl
    sudo cat /var/lib/jenkins/secrets/initialAdminPassword
    ```
 2. Choose **Install suggested plugins**, create your admin user, and finish the wizard.
-(screenshots/S12-jenkins-dashboard.png)
+![Project Screenshot](screenshots/S12-jenkins-dashboard.png)
 3. Go to **Manage Jenkins > Nodes** and confirm the **Built-In Node** is online (no red cross).
-(screenshots/S13-nodes-online.png)
+![Project Screenshot](screenshots/S13-nodes-online.png)
 4. If you did not move `/tmp` in Step 3: on the Nodes page click the gear icon (**Configure Monitors**), set **Free Temp Space** to about `100` MB, and save.
 
 ## Step 7: Create the pipeline job
@@ -241,14 +239,14 @@ Look for `active (running)`. The last command must print an empty container tabl
    | Credentials | none (public repo) |
    | Branch Specifier | `*/main` |
    | Script Path | `Jenkinsfile` |
-(screenshots/S14-pipeline-config.png)
+![Project Screenshot](screenshots/S14-pipeline-config.png)
 
 3. Click **Save**, then **Build Now**.
 4. Open the build number > **Console Output**. The first build is slow because it pulls the Python and MySQL images (5 to 10 minutes on a small server).
-(screenshots/S16-console-success.png)
+![Project Screenshot](screenshots/S16-console-success.png)
 
 The pipeline has three stages: **Clone Code**, **Build Docker Image** and **Deploy with Docker Compose**. A successful run ends with `Finished: SUCCESS`.
-(screenshots/S15-stage-view.png)
+![Project Screenshot](screenshots/S15-stage-view.png)
 
 ## Step 8: Verify the deployment
 
@@ -257,7 +255,7 @@ docker ps
 docker logs two-tier-app
 docker logs mysql
 ```
-(screenshots/S17-docker-ps-healthy.png)
+![Project Screenshot](screenshots/S17-docker-ps-healthy.png)
 
 Both `mysql` and `two-tier-app` should be up, and show `(healthy)` after about a minute. Then open:
 
@@ -266,8 +264,8 @@ http://<public-ip>:5000
 ```
 
 Submit a message and refresh the page. If it persists, the Flask-to-MySQL connection and the data volume are working.
-(screenshots/S18-app-running.png)
-(screenshots/S18b-mysql-query.png)
+![Project Screenshot](screenshots/S18-app-running.png)
+![Project Screenshot](screenshots/S18b-mysql-query.png)
 
 ## Stopping, restarting and cleaning up
 
